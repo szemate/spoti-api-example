@@ -10,11 +10,10 @@ app.get('/playlists/:id', async (req, res) => {
   const playlistId = req.params.id;
 
   try {
-    const token = await spotify.getAccessToken();
-    const title = await spotify.getPlaylistTitle(playlistId, token);
-    const tracks = await spotify.getPlaylistTracks(playlistId, token);
+    const accessToken = await spotify.getAccessToken();
+    const playlistData = await spotify.getPlaylistData(playlistId, accessToken);
 
-    res.send({ title, tracks });
+    res.send(playlistData);
   } catch (error) {
     console.error(error);
 

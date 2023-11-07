@@ -22,24 +22,8 @@ async function getAccessToken() {
 };
 
 // https://developer.spotify.com/documentation/web-api/reference/get-playlist
-async function getPlaylistTitle(playlistId, token) {
+async function getPlaylistData(playlistId, token) {
   const apiUrl = 'https://api.spotify.com/v1/playlists/' + playlistId;
-
-  const response = await fetch(apiUrl, {
-    headers: {
-      Authorization: 'Bearer ' + token,
-    },
-  });
-
-  const data = await response.json();
-  console.debug(data);
-
-  return response.ok ? data.name : Promise.reject(data.error);
-}
-
-// https://developer.spotify.com/documentation/web-api/reference/get-playlists-tracks
-async function getPlaylistTracks(playlistId, token) {
-  const apiUrl = 'https://api.spotify.com/v1/playlists/' + playlistId + '/tracks';
 
   const response = await fetch(apiUrl, {
     headers: {
@@ -54,16 +38,16 @@ async function getPlaylistTracks(playlistId, token) {
     return Promise.reject(data.error);
   }
 
-  return data.items.map((item) => {
-    return {
+  return {
+    title: data.name,
+    tracks: data.tracks.items.map((item) => ({
       title: item.track.name,
       artist: item.track.artists.map(((artist) => artist.name)).join(', '),
-    }
-  });
+    })),
+  };
 }
 
 module.exports = {
   getAccessToken,
-  getPlaylistTracks,
-  getPlaylistTitle,
+  getPlaylistData,
 };

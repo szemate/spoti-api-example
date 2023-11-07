@@ -1,5 +1,4 @@
 const express = require('express');
-const memoize = require('memoizee');
 
 require('dotenv').config()
 
@@ -9,7 +8,7 @@ const port = process.env.PORT ?? 5000;
 
 const app = express();
 
-const getAccessToken = memoize(async function() {
+async function getAccessToken() {
   const apiUrl = 'https://accounts.spotify.com/api/token';
   const encodedCredentials = Buffer.from(clientId + ':' + clientSecret).toString('base64');
 
@@ -26,9 +25,9 @@ const getAccessToken = memoize(async function() {
   console.debug(data);
 
   return response.ok ? data.access_token : Promise.reject(data.error);
-}, { maxAge: 3600000 });
+};
 
-const getPlaylistTitle = async function(playlistId, token) {
+async function getPlaylistTitle(playlistId, token) {
   const apiUrl = 'https://api.spotify.com/v1/playlists/' + playlistId;
 
   const response = await fetch(apiUrl, {
@@ -43,7 +42,7 @@ const getPlaylistTitle = async function(playlistId, token) {
   return response.ok ? data.name : Promise.reject(data.error);
 }
 
-const getPlaylistTracks = async function(playlistId, token) {
+async function getPlaylistTracks(playlistId, token) {
   const apiUrl = 'https://api.spotify.com/v1/playlists/' + playlistId + '/tracks';
 
   const response = await fetch(apiUrl, {

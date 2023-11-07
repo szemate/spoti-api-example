@@ -8,6 +8,7 @@ const port = process.env.PORT ?? 5000;
 
 const app = express();
 
+// https://developer.spotify.com/documentation/web-api/tutorials/client-credentials-flow
 async function getAccessToken() {
   const apiUrl = 'https://accounts.spotify.com/api/token';
   const encodedCredentials = Buffer.from(clientId + ':' + clientSecret).toString('base64');
@@ -27,6 +28,7 @@ async function getAccessToken() {
   return response.ok ? data.access_token : Promise.reject(data.error);
 };
 
+// https://developer.spotify.com/documentation/web-api/reference/get-playlist
 async function getPlaylistTitle(playlistId, token) {
   const apiUrl = 'https://api.spotify.com/v1/playlists/' + playlistId;
 
@@ -42,6 +44,7 @@ async function getPlaylistTitle(playlistId, token) {
   return response.ok ? data.name : Promise.reject(data.error);
 }
 
+// https://developer.spotify.com/documentation/web-api/reference/get-playlists-tracks
 async function getPlaylistTracks(playlistId, token) {
   const apiUrl = 'https://api.spotify.com/v1/playlists/' + playlistId + '/tracks';
 

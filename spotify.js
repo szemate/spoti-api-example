@@ -57,7 +57,7 @@ async function getPlaylistTracks(playlistId, token) {
   return data.items.map((item) => {
     return {
       title: item.track.name,
-      artists: item.track.artists.map(((artist) => artist.name)),
+      artist: item.track.artists.map(((artist) => artist.name)).join(', '),
     }
   });
 }

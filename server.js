@@ -6,23 +6,27 @@ const port = process.env.PORT ?? 5000;
 
 const app = express();
 
-app.get('/playlists/:id', async (req, res) => {
+app.get('/playlists/:id', (req, res) => {
   const playlistId = req.params.id;
 
-  try {
-    const accessToken = await spotify.getAccessToken();
-    const playlistData = await spotify.getPlaylistData(playlistId, accessToken);
+  spotify.getAccessToken()
+    .then((accessToken) => spotify.getPlaylistData(playlistId, accessToken))
+    .then((playlistData) => {
+      const { title, tracks } = playlistData;
+      console.log('title:', title);
+      console.log('tracks:', tracks);
 
-    res.send(playlistData);
-  } catch (error) {
-    console.error(error);
+      res.send(playlistData);
+    })
+    .catch((error) => {
+      console.error(error);
 
-    if (error.status === 404) {
-      res.status(404).send({ message: 'Not Found' });
-    } else {
-      res.status(500).send({ message: 'Internal Server Error' });
-    }
-  }
+      if (error.status === 404) {
+        res.status(404).send({ message: 'Not Found' });
+      } else {
+        res.status(500).send({ message: 'Internal Server Error' });
+      }
+    });
 });
 
 app.listen(port, () => {

@@ -64,7 +64,9 @@ export default function PlaylistFetcher() {
       <main>
         <h2>{playlistName}</h2>
         <section>
-          {playlistItems.map((item) => <div>{item.artist} - {item.title}</div>)}
+          {playlistItems.map((item, idx) => (
+            <div key={idx}>{item.artist} - {item.title}</div>
+          ))}
         </section>
       </main>
     </>

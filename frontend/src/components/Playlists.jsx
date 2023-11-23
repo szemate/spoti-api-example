@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import playlistPlaceholderImage from "./images/music-notes.svg";
 
 
 function Playlists() {
 
   const [playlists, setPlaylists] = useState(null);
+  const navigate = useNavigate();
 
   function modifyImageUrl(playlist) {
     if (playlist.images.length <= 0) {
@@ -25,6 +27,9 @@ function Playlists() {
     fetch("https://api.spotify.com/v1/me/playlists", payload)
       .then((response) => response.json())
       .then((data) => {
+        if (data.error && data.error.status === 401) {
+          return navigate("/");
+        }
         console.log("data", data);
         setPlaylists(data);
       });
